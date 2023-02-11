@@ -99,9 +99,10 @@ namespace portscanerius
         private void rewrapList()
         {
             Thread.Sleep(1000);
-            enabledPorts.Clear();
+            
             this.Invoke(delegate
             {
+                listView1.Items.Clear();
                 foreach (var item in enabledPorts)
                 {
                     var item1 = new ListViewItem(item.Key);
