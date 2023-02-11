@@ -7,6 +7,8 @@ namespace portscanerius
     {
         private readonly object _lock = new object();
         private readonly ObservableCollection<KeyValuePair<string, int>> enabledPorts = new ObservableCollection<KeyValuePair<string, int>>();
+
+        private ObservableCollection<KeyValuePair<string, int>> enabledPortsBuf = new ObservableCollection<KeyValuePair<string, int>>();
         public mainForm()
         {
             InitializeComponent();
@@ -91,15 +93,12 @@ namespace portscanerius
 
         private async void mainForm_Load(object sender, EventArgs e)
         {
-            //This is not really clean, instead of rewrap the List once per second,
-            //you should create a eventhandler like list.onchanged to handle the rewrap
-            await Task.Run(() => rewrapList());
+            //Onchange of the collection, rewrap list
+            enabledPorts.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(EnabledPorts_CollectionChanged);
         }
 
-        private void rewrapList()
+        private void EnabledPorts_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Thread.Sleep(1000);
-            
             this.Invoke(delegate
             {
                 listView1.Items.Clear();
@@ -110,8 +109,6 @@ namespace portscanerius
                     listView1.Items.Add(item1);
                 }
             });
-
-            rewrapList();
         }
 
         private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
