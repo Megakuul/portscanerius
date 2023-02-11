@@ -119,6 +119,7 @@
             // 
             // timoutBx
             // 
+            this.timoutBx.DecimalPlaces = 2;
             this.timoutBx.Increment = new decimal(new int[] {
             1,
             0,
